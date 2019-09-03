@@ -68,7 +68,7 @@ internal class NegotiationPayloadParser {
     private static func parseNegotiation(_ negotiationResponseJSON: [String: Any]) throws -> NegotiationResponse {
         let connectionId = try parseConnectionId(negotiationResponseJSON: negotiationResponseJSON)
         let availableTransports = try parseAvailableTransports(negotiationResponseJSON: negotiationResponseJSON)
-
+ 
         return NegotiationResponse(connectionId: connectionId, availableTransports: availableTransports)
     }
 
@@ -82,7 +82,7 @@ internal class NegotiationPayloadParser {
 
     private static func parseAvailableTransports(negotiationResponseJSON: [String: Any]) throws -> [TransportDescription] {
         guard let transports = negotiationResponseJSON["availableTransports"] as? [[String: Any]] ?? negotiationResponseJSON["AvailableTransports"] as? [[String: Any]] else {
-            throw SignalRError.invalidNegotiationResponse(message: "availableTransports property not found or invalid")
+            return []
         }
 
         return try transports.map { try parseTransport(transportJSON: $0) }

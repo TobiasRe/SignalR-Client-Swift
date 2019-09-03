@@ -16,6 +16,9 @@ internal class DefaultTransportFactory: TransportFactory {
     }
 
     func createTransport(availableTransports: [TransportDescription]) throws -> Transport {
+        //If no transport description was provided we default to WebSockets
+        guard availableTransports.count > 0 else {return WebsocketsTransport(logger: logger)}
+        
         for transport in availableTransports {
             if transport.transportType == .webSockets {
                 return WebsocketsTransport(logger: logger)
