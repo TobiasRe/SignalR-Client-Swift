@@ -23,7 +23,7 @@ public class WebsocketsTransport: Transport {
     public func start(url: URL, options: HttpConnectionOptions) {
         logger.log(logLevel: .info, message: "Starting WebSocket transport")
         var request = URLRequest(url: convertUrl(url: url))
-
+        logger.log(logLevel: .info, message: "WebSocket will connect to " + request.debugDescription)
         populateHeaders(headers: options.headers, request: &request)
         setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &request)
 
