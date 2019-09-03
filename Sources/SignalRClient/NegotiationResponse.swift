@@ -73,7 +73,7 @@ internal class NegotiationPayloadParser {
     }
 
     private static func parseConnectionId(negotiationResponseJSON: [String: Any]) throws -> String {
-        guard let connectionId = negotiationResponseJSON["connectionId"] as? String else {
+        guard let connectionId = negotiationResponseJSON["connectionId"] as? String ?? negotiationResponseJSON["ConnectionId"] as? String else {
             throw SignalRError.invalidNegotiationResponse(message: "connectionId property not found or invalid")
         }
 
@@ -81,7 +81,7 @@ internal class NegotiationPayloadParser {
     }
 
     private static func parseAvailableTransports(negotiationResponseJSON: [String: Any]) throws -> [TransportDescription] {
-        guard let transports = negotiationResponseJSON["availableTransports"] as? [[String: Any]] else {
+        guard let transports = negotiationResponseJSON["availableTransports"] as? [[String: Any]] ?? negotiationResponseJSON["AvailableTransports"] as? [[String: Any]] else {
             throw SignalRError.invalidNegotiationResponse(message: "availableTransports property not found or invalid")
         }
 
@@ -89,12 +89,12 @@ internal class NegotiationPayloadParser {
     }
 
     private static func parseTransport(transportJSON: [String: Any]) throws -> TransportDescription {
-        guard let transportName = transportJSON["transport"] as? String,
+        guard let transportName = transportJSON["transport"] as? String ?? transportJSON["Transport"] as? String,
             let transportType = try? TransportType.fromString(transportName: transportName) else {
             throw SignalRError.invalidNegotiationResponse(message: "transport property not found or invalid")
         }
 
-        guard let transferFormatsJSON = transportJSON["transferFormats"] as? [String] else {
+        guard let transferFormatsJSON = transportJSON["transferFormats"] as? [String] ?? transportJSON["TransferFormats"] as? [String] else {
             throw SignalRError.invalidNegotiationResponse(message: "transferFormats property not found or invalid")
         }
 
@@ -123,9 +123,9 @@ internal class NegotiationPayloadParser {
     }
 
     private static func parseString(negotiationResponseJSON: [String: Any], key: String) throws -> String {
-        guard let connectionId = negotiationResponseJSON[key] as? String else {
+        guard let string = negotiationResponseJSON[key] as? String ?? negotiationResponseJSON[key.capitalized] as? String else {
             throw SignalRError.invalidNegotiationResponse(message: "\(key) property not found or invalid")
         }
-        return connectionId
+        return string
     }
 }
